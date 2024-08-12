@@ -1,9 +1,9 @@
 "use client";
-import { useEffect } from "react";
-import Navbar from "./app/(components)/Navbar";
-import Sidebar from "./app/(components)/Sidebar";
-import StoreProvider from "./app/redux";
-import { useAppSelector } from "./app/redux";
+
+import React, { useEffect } from "react";
+import Navbar from "@/app/(components)/Navbar";
+import Sidebar from "@/app/(components)/Sidebar";
+import StoreProvider, { useAppSelector } from "./app/redux";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const isSidebarCollapsed = useAppSelector(
@@ -14,10 +14,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
+      document.documentElement.classList.remove("light");
     } else {
       document.documentElement.classList.add("light");
+      document.documentElement.classList.remove("dark");
     }
-  });
+  }, [isDarkMode]);
 
   return (
     <div
@@ -27,9 +29,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     >
       <Sidebar />
       <main
-        className={`flex flex-col w-full h-full py-7 px-9 bg-gray-50 ${
-          isSidebarCollapsed ? "md:pl-24" : "md:pl-72"
-        }`}
+        style={{
+          paddingTop: "1.75rem", // Equivalent to py-7
+          paddingBottom: "1.75rem",
+          paddingLeft: "2.25rem", // Equivalent to px-9
+          paddingRight: "2.25rem",
+          backgroundColor: "#F9FAFB", // Equivalent to bg-gray-50
+          transition: "padding-left 0.3s ease", // Smooth transition for padding-left
+          paddingLeft: isSidebarCollapsed ? "6rem" : "18rem", // Equivalent to md:pl-24 and md:pl-72
+        }}
+        className="flex flex-col w-full h-full"
       >
         <Navbar />
         {children}
@@ -37,6 +46,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     </div>
   );
 };
+
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <StoreProvider>
